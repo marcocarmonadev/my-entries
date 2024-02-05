@@ -1,0 +1,24 @@
+{
+	"name": "My API",
+	"build": {
+		"context": "..",
+		"dockerfile": "Dockerfile"
+	},
+	"overrideCommand": false,
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.pylint",
+				"christian-kohler.path-intellisense",
+				"ms-python.isort",
+				"ms-python.black-formatter",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"VisualStudioExptTeam.vscodeintellicode-completions"
+			]
+		}
+	},
+	"containerEnv": {
+		"CLICKUP_API_KEY": "pk_55602358_U0V7FV3G7S019173DVMBHZHGNY2HIKU8"
+	}
+}
