@@ -35,10 +35,13 @@ class HttpController:
                     purchase_datetime,
                 ) in sheet.iter_rows(
                     min_row=2,
+                    max_col=6,
                     values_only=True,
                 )
+                if task_id
             ]
         )
+        workbook.close()
 
     async def register_super_purchase(
         self,
