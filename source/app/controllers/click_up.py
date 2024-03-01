@@ -60,6 +60,6 @@ class HttpController:
             ),
             self.click_up_client.update_task(
                 task_id,
-                status="completed",
+                status="closed",
             ),
         )
