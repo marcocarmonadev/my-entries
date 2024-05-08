@@ -2,8 +2,8 @@ import asyncio
 import datetime as dt
 from dataclasses import dataclass
 
-from ..clients import ClickUpClient
-from ..helpers import Workbook
+from clients import ClickUpClient
+from helpers import Workbook
 
 
 @dataclass

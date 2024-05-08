@@ -1,8 +1,8 @@
 from fastapi.param_functions import Depends
 from httpx import AsyncClient
 
-from ..clients import ClickUpClient
-from ..core import Dependency
+from clients import ClickUpClient
+from core import Dependency
 from .click_up import HttpController as ClickUpHttpController
 
 

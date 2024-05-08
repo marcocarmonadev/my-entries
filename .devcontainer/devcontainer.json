@@ -1,24 +1,48 @@
 {
 	"name": "My API",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"[python]": {
+					"diffEditor.ignoreTrimWhitespace": false,
+					"editor.formatOnType": true,
+					"editor.wordBasedSuggestions": "off",
+					"editor.inlineSuggest.suppressSuggestions": false,
+					"editor.defaultFormatter": "charliermarsh.ruff",
+					"editor.codeActionsOnSave": {
+						"source.organizeImports": "explicit"
+					}
+				},
+				"python.analysis.typeCheckingMode": "standard",
+				"python.analysis.autoImportCompletions": true
+			},
+			"extensions": [
+				"ms-python.python",
+				"christian-kohler.path-intellisense",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"VisualStudioExptTeam.vscodeintellicode-completions",
+				"charliermarsh.ruff",
+				"Postman.postman-for-vscode"
+			]
+		}
+	},
 	"build": {
 		"context": "..",
 		"dockerfile": "Dockerfile"
 	},
-	"overrideCommand": false,
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-python.python",
-				"ms-python.pylint",
-				"christian-kohler.path-intellisense",
-				"ms-python.isort",
-				"ms-python.black-formatter",
-				"VisualStudioExptTeam.vscodeintellicode",
-				"VisualStudioExptTeam.vscodeintellicode-completions"
-			]
+	"runArgs": [
+		"--env-file=envs/development.env",
+		"--name=my-api-container-development"
+	],
+	"postCreateCommand": [
+		"poetry",
+		"install"
+	],
+	"mounts": [
+		{
+			"source": "${localEnv:HOME}/.ssh",
+			"target": "/home/vscode/.ssh",
+			"type": "bind"
 		}
-	},
-	"containerEnv": {
-		"CLICKUP_API_KEY": "pk_55602358_U0V7FV3G7S019173DVMBHZHGNY2HIKU8"
-	}
+	]
 }

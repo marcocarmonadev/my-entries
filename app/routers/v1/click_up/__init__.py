@@ -3,8 +3,8 @@ from fastapi.param_functions import Depends
 from fastapi.routing import APIRouter
 from starlette.status import HTTP_201_CREATED
 
-from ....controllers import ClickUpHttpController, Factory
-from ....schemas import Tag
+from controllers import ClickUpHttpController, Factory
+from schemas import Tag
 
 router = APIRouter()
 

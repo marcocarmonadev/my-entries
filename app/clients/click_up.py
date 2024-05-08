@@ -3,7 +3,7 @@ from typing import ClassVar
 
 from httpx import AsyncClient, HTTPStatusError
 
-from ..core import settings
+from core import settings
 
 
 @dataclass
