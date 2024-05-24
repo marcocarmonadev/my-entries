@@ -26,10 +26,7 @@
 			]
 		}
 	},
-	"build": {
-		"context": "..",
-		"dockerfile": "Dockerfile"
-	},
+	"image": "marcocarmonapy/devcontainers-poetry",
 	"runArgs": [
 		"--env-file=envs/development.env",
 		"--name=my-api-container-development"
