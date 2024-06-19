@@ -27,5 +27,5 @@ RUN user_group_name="python" && \
 USER python
 WORKDIR /code
 COPY --chown=python:python --from=builder /tmp/.venv/ .venv/
-COPY --chown=python:python app/ app/
-ENTRYPOINT [ ".venv/bin/python", "app/main.py" ]
+COPY --chown=python:python source/ source/
+ENTRYPOINT [ ".venv/bin/python", "source/main.py" ]

@@ -1,0 +1,9 @@
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/python:3.12
+    volumes:
+      - ../:/workspace/:cached
+    command: sleep infinity
+    environment:
+      - POETRY_VIRTUALENVS_IN_PROJECT=true
+    container_name: marcocarmonadev-backend-devcontainer
