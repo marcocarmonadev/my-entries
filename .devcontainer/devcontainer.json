@@ -1,0 +1,28 @@
+{
+	"name": "Marcocarmonadev Backend",
+	"mounts": [
+		{
+			"source": "${localEnv:HOME}/.ssh/",
+			"target": "/home/vscode/.ssh/",
+			"type": "bind"
+		}
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"charliermarsh.ruff",
+				"Postman.postman-for-vscode",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"christian-kohler.path-intellisense"
+			]
+		}
+	},
+	"dockerComposeFile": [
+		"docker-compose.yml",
+		"../docker-compose.base.yml"
+	],
+	"service": "devcontainer",
+	"workspaceFolder": "/workspace/",
+	"onCreateCommand": "curl -sSL https://install.python-poetry.org | python3 -",
+	"postCreateCommand": "poetry install"
+}

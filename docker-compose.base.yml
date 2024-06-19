@@ -1,0 +1,19 @@
+services:
+  database:
+    image: postgres:16-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    container_name: marcocarmonadev-backend-database
+    networks:
+      - PostgreSQL
+      - default
+
+volumes:
+  postgres-data:
+
+
+networks:
+  PostgreSQL:
+    external: true
