@@ -10,7 +10,9 @@ from .settings import Settings
 @dataclass
 class Server:
     _settings: ClassVar[Settings] = Settings()  # type: ignore
-    _is_development_mode: ClassVar[bool] = _settings.ENVIRONMENT == environment.Entity.DEVELOPMENT
+    _is_development_mode: ClassVar[bool] = (
+        _settings.ENVIRONMENT == environment.Entity.DEVELOPMENT
+    )
 
     @classmethod
     def run(cls):
