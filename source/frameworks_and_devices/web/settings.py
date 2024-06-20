@@ -3,4 +3,4 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    ENVIRONMENT: environment.Entity = environment.Entity.DEVELOPMENT
+    ENVIRONMENT: environment.Entity

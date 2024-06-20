@@ -2,12 +2,15 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 import uvicorn
+from entities import environment
+
+from .settings import Settings
 
 
 @dataclass
 class Server:
-    # _settings: ClassVar[Settings] = Settings()  # type: ignore
-    _is_development_mode: ClassVar[bool] = True
+    _settings: ClassVar[Settings] = Settings()  # type: ignore
+    _is_development_mode: ClassVar[bool] = _settings.ENVIRONMENT == environment.Entity.DEVELOPMENT
 
     @classmethod
     def run(cls):
