@@ -8,9 +8,11 @@ start:
 	fi;
 down:
 	@if [ "$(shell docker ps -aq -f name=marcocarmonadev-backend-devcontainer)" ]; then \
+		docker stop marcocarmonadev-backend-devcontainer; \
 		docker rm marcocarmonadev-backend-devcontainer; \
 	fi
 	@if [ "$(shell docker ps -aq -f name=marcocarmonadev-backend-database)" ]; then \
+		docker stop marcocarmonadev-backend-database; \
 		docker rm marcocarmonadev-backend-database; \
 	fi
 	@docker compose down;
