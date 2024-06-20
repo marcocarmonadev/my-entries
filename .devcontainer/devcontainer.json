@@ -17,6 +17,10 @@
 			]
 		}
 	},
+	"containerEnv": {
+		"POETRY_VIRTUALENVS_IN_PROJECT": "true",
+		"ENVIRONMENT": "development"
+	},
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "devcontainer",
 	"workspaceFolder": "/workspace/",

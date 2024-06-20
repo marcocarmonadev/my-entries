@@ -7,8 +7,6 @@ services:
     container_name: marcocarmonadev-backend-devcontainer
     depends_on:
       - database
-    environment:
-      - POETRY_VIRTUALENVS_IN_PROJECT=true
     env_file:
       - ../.envs/develoment.env
     image: mcr.microsoft.com/devcontainers/python:3.12
