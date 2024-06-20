@@ -1,19 +1,16 @@
-CURRENT_BRANCH=$(shell git branch --show-current)
 start:
-	@if [ $(CURRENT_BRANCH) = main ]; then \
-		docker compose \
-		-f docker-compose.yml \
-		-f docker-compose.base.yml \
-		up --build; \
+	@if [ $(shell git branch --show-current) = main ]; then \
+		docker compose up \
+		--build \
+		--no-log-prefix; \
 	else \
 		echo "Error: switch to the 'main' branch to start."; \
 	fi;
 down:
-	@docker compose \
-	-f docker-compose.yml \
-	-f docker-compose.base.yml \
-	down;
-	@docker compose \
-	-f .devcontainer/docker-compose.yml \
-	-f docker-compose.base.yml \
-	down;
+	@if [ "$(shell docker ps -aq -f name=marcocarmonadev-backend-devcontainer)" ]; then \
+		docker rm marcocarmonadev-backend-devcontainer; \
+	fi
+	@if [ "$(shell docker ps -aq -f name=marcocarmonadev-backend-database)" ]; then \
+		docker rm marcocarmonadev-backend-database; \
+	fi
+	@docker compose down;

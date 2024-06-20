@@ -17,12 +17,10 @@
 			]
 		}
 	},
-	"dockerComposeFile": [
-		"docker-compose.yml",
-		"../docker-compose.base.yml"
-	],
+	"dockerComposeFile": "docker-compose.yml",
 	"service": "devcontainer",
 	"workspaceFolder": "/workspace/",
+	"initializeCommand": "make down",
 	"onCreateCommand": "curl -sSL https://install.python-poetry.org | python3 -",
 	"postCreateCommand": "poetry install"
 }
