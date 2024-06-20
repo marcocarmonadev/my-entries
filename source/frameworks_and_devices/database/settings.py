@@ -1,9 +1,10 @@
 from pydantic.networks import PostgresDsn
-from pydantic_core import MultiHostUrl
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    URL: PostgresDsn = MultiHostUrl(
-        "postgresql+asyncpg://postgres:postgres@database:5432/development"
+    model_config = SettingsConfigDict(
+        env_prefix="DATABASE_",
     )
+
+    URL: PostgresDsn

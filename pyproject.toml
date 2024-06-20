@@ -1,11 +1,10 @@
 [tool.poetry]
 name = "backend"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["Marco Carmona <marcocarmonadev@outlook.com>"]
 readme = "README.md"
 package-mode = false
-
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -16,9 +15,6 @@ asyncpg = "^0.29.0"
 pydantic-settings = "^2.3.3"
 orjson = "^3.10.5"
 python-dateutil = "^2.9.0.post0"
-
-
-[tool.poetry.group.dev.dependencies]
 alembic = "^1.13.1"
 
 [build-system]

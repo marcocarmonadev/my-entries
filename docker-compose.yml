@@ -1,5 +1,12 @@
 services:
-  web:
+  main:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: marcocarmonadev-backend-main
+    depends_on:
+      - database
+    env_file:
+      - .envs/production.env
+    ports:
+      - "8001:8001"

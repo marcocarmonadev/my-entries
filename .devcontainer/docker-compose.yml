@@ -1,5 +1,7 @@
 services:
   devcontainer:
+    depends_on:
+      - database
     image: mcr.microsoft.com/devcontainers/python:3.12
     volumes:
       - ../:/workspace/:cached
@@ -7,3 +9,5 @@ services:
     environment:
       - POETRY_VIRTUALENVS_IN_PROJECT=true
     container_name: marcocarmonadev-backend-devcontainer
+    env_file:
+      - ../.envs/develoment.env
