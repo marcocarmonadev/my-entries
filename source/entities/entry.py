@@ -44,7 +44,6 @@ class ReadSchema(BaseModel):
     uuid: UUID
     repeat_forever: bool
     status: Status
-    repeat_forever: bool
     repeated: bool | None
 
 
