@@ -12,3 +12,7 @@ services:
     image: mcr.microsoft.com/devcontainers/python:3.12
     volumes:
       - ../:/workspace/:cached
+
+networks:
+  default:
+    name: marcocarmonadev-backend-default
