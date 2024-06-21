@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 from entities import entry
 
@@ -14,8 +15,19 @@ class Get:
     async def as_jsonb(self) -> list[entry.ReadSchema]:
         return [
             entry.ReadSchema.model_validate(
-                entry_model,
+                _entry,
                 from_attributes=True,
             )
-            for entry_model in await self.entries_database_gateway.select()
+            for _entry in await self.entries_database_gateway.select()
         ]
+
+
+@dataclass
+class Delete:
+    entries_database_gateway: "entries_gateways.Database"
+
+    async def as_jsonb(
+        self,
+        uuids: list[UUID],
+    ) -> None:
+        await self.entries_database_gateway.delete(uuids)

@@ -32,8 +32,19 @@ class CreateSchema(BaseModel):
     )
 
 
-class UpdateStatusSchema(BaseModel):
-    status: Status
+class UpdateSchema(BaseModel):
+    concept: str | None = Field(
+        default=None,
+    )
+    amount: float | None = Field(
+        default=None,
+    )
+    due_date: dt.date | None = Field(
+        default=None,
+    )
+    status: Status | None = Field(
+        default=None,
+    )
 
 
 class ReadSchema(BaseModel):

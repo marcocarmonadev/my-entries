@@ -11,18 +11,18 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class Add:
+class Create:
     entries_database_gateway: "entries_gateways.Database"
 
     async def as_jsonb(
         self,
         entry_create_schema: entry.CreateSchema,
     ) -> list[entry.ReadSchema]:
-        entry_models = []
+        entries = []
         if entry_create_schema.repeat_count == -1:
             if entry_create_schema.repeat_interval is None:
                 raise
-            entry_models.append(
+            entries.append(
                 entry.Model(
                     **entry_create_schema.model_dump(
                         exclude={"repeat_count"},
@@ -32,7 +32,7 @@ class Add:
                 )
             )
         else:
-            entry_models.extend(
+            entries.extend(
                 [
                     entry.Model(
                         **entry_create_schema.model_dump(
@@ -51,26 +51,51 @@ class Add:
                     for i in range(entry_create_schema.repeat_count + 1)
                 ]
             )
-        await self.entries_database_gateway.insert(entry_models)
+        await self.entries_database_gateway.insert(entries)
         return [
             entry.ReadSchema.model_validate(
-                entry_model,
+                _entry,
                 from_attributes=True,
             )
-            for entry_model in entry_models
+            for _entry in entries
         ]
 
 
 @dataclass
-class UpdateStatus:
+class Update:
     entry_database_gateway: "entry_gateways.Database"
 
     async def as_jsonb(
         self,
         entry_uuid: UUID,
-        entry_update_status_schema: entry.UpdateStatusSchema,
+        entry_update_schema: entry.UpdateSchema,
     ):
-        await self.entry_database_gateway.update_status(
+        await self.entry_database_gateway.update(
             entry_uuid,
-            status=entry_update_status_schema.status,
+            entry_update_schema,
+        )
+
+
+@dataclass
+class Delete:
+    entry_database_gateway: "entry_gateways.Database"
+
+    async def as_jsonb(
+        self,
+        entry_uuid: UUID,
+    ):
+        await self.entry_database_gateway.delete(entry_uuid)
+
+
+@dataclass
+class Get:
+    entry_database_gateway: "entry_gateways.Database"
+
+    async def as_jsonb(
+        self,
+        entry_uuid: UUID,
+    ):
+        return entry.ReadSchema.model_validate(
+            obj=await self.entry_database_gateway.select_by_uuid(entry_uuid),
+            from_attributes=True,
         )

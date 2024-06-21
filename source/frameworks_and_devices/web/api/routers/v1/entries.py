@@ -22,44 +22,34 @@ router = APIRouter(
 )
 
 
-@router.post(
-    path="",
-    responses={
-        status.HTTP_200_OK: {
-            "model": list[entry.ReadSchema],
-        }
-    },
-)
-async def add_entry(
-    entry_create_schema: entry.CreateSchema = Body(...),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
-    ),
-):
-    return await entry_controllers.Add(entries_gateways.DatabaseImp(session)).as_jsonb(
-        entry_create_schema
-    )
-
-
-@router.patch(
-    path="/{entry_uuid}/status",
+@router.delete(
+    path="/{entry_uuid}",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses={
-        status.HTTP_204_NO_CONTENT: {
-            "model": None,
-        }
-    },
 )
-async def update_entry_status(
+async def delete_entry(
     entry_uuid: UUID = Path(...),
-    entry_update_status_schema: entry.UpdateStatusSchema = Body(...),
     session: "AsyncSession" = Depends(
         dependency=database.Session.generate,
     ),
 ):
-    return await entry_controllers.UpdateStatus(
-        entry_gateways.DatabaseImp(session)
-    ).as_jsonb(entry_uuid, entry_update_status_schema)
+    await entry_controllers.Delete(
+        entry_database_gateway=entry_gateways.DatabaseImp(session),
+    ).as_jsonb(entry_uuid)
+
+
+@router.delete(
+    path="",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def delete_entries(
+    entry_uuids: list[UUID] = Body(...),
+    session: "AsyncSession" = Depends(
+        dependency=database.Session.generate,
+    ),
+):
+    await entries_controllers.Delete(
+        entries_database_gateway=entries_gateways.DatabaseImp(session),
+    ).as_jsonb(entry_uuids)
 
 
 @router.get(
@@ -76,5 +66,59 @@ async def get_entries(
     ),
 ):
     return await entries_controllers.Get(
-        entries_gateways.DatabaseImp(session)
+        entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb()
+
+
+@router.get(
+    path="/{entry_uuid}",
+    responses={
+        status.HTTP_200_OK: {
+            "model": entry.ReadSchema,
+        }
+    },
+)
+async def get_entry(
+    entry_uuid: UUID = Path(...),
+    session: "AsyncSession" = Depends(
+        dependency=database.Session.generate,
+    ),
+):
+    return await entry_controllers.Get(
+        entry_database_gateway=entry_gateways.DatabaseImp(session),
+    ).as_jsonb(entry_uuid)
+
+
+@router.post(
+    path="",
+    responses={
+        status.HTTP_201_CREATED: {
+            "model": list[entry.ReadSchema],
+        }
+    },
+)
+async def create_entry(
+    entry_create_schema: entry.CreateSchema = Body(...),
+    session: "AsyncSession" = Depends(
+        dependency=database.Session.generate,
+    ),
+):
+    return await entry_controllers.Create(
+        entries_database_gateway=entries_gateways.DatabaseImp(session),
+    ).as_jsonb(entry_create_schema)
+
+
+@router.put(
+    path="/{entry_uuid}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def update_entry(
+    entry_uuid: UUID = Path(...),
+    entry_update_schema: entry.UpdateSchema = Body(...),
+    session: "AsyncSession" = Depends(
+        dependency=database.Session.generate,
+    ),
+):
+    await entry_controllers.Update(
+        entry_database_gateway=entry_gateways.DatabaseImp(session),
+    ).as_jsonb(entry_uuid, entry_update_schema)
