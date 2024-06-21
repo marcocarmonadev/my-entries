@@ -12,13 +12,20 @@ if TYPE_CHECKING:
 class Get:
     entries_database_gateway: "entries_gateways.Database"
 
-    async def as_jsonb(self) -> list[entry.ReadSchema]:
+    async def as_jsonb(
+        self,
+        only_active: bool,
+    ) -> list[entry.ReadSchema]:
+        if only_active:
+            select_function = self.entries_database_gateway.select_actives()
+        else:
+            select_function = self.entries_database_gateway.select()
         return [
             entry.ReadSchema.model_validate(
                 _entry,
                 from_attributes=True,
             )
-            for _entry in await self.entries_database_gateway.select()
+            for _entry in await select_function
         ]
 
 

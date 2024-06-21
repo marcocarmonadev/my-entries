@@ -99,3 +99,11 @@ class Get:
             obj=await self.entry_database_gateway.select_by_uuid(entry_uuid),
             from_attributes=True,
         )
+
+
+@dataclass
+class GetStatistics:
+    entries_database_gateway: "entries_gateways.Database"
+
+    async def as_jsonb(self):
+        return await self.entries_database_gateway.select_statistics()

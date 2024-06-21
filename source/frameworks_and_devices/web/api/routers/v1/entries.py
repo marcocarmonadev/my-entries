@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from entities import entry, tag
+from entities import entries, entry, tag
+from fastapi import Query
 from fastapi.param_functions import Body, Depends, Path
 from fastapi.routing import APIRouter
 from frameworks_and_devices import database
@@ -61,11 +62,32 @@ async def delete_entries(
     },
 )
 async def get_entries(
+    only_active: bool = Query(
+        default=True,
+    ),
     session: "AsyncSession" = Depends(
         dependency=database.Session.generate,
     ),
 ):
     return await entries_controllers.Get(
+        entries_database_gateway=entries_gateways.DatabaseImp(session),
+    ).as_jsonb(only_active)
+
+
+@router.get(
+    path="/statistics",
+    responses={
+        status.HTTP_200_OK: {
+            "model": entries.StatisticsSchema,
+        }
+    },
+)
+async def get_entries_statistics(
+    session: "AsyncSession" = Depends(
+        dependency=database.Session.generate,
+    ),
+):
+    return await entry_controllers.GetStatistics(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb()
 
