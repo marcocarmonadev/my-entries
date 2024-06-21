@@ -10,7 +10,7 @@ from sqlalchemy.sql import select
 
 class Database(ABC):
     @abstractmethod
-    async def get_by_uuid(
+    async def select_by_uuid(
         self,
         uuid: UUID,
     ) -> entry.Model: ...
@@ -20,17 +20,17 @@ class Database(ABC):
         self,
         uuid: UUID,
         status: entry.Status,
-    ): ...
+    ) -> None: ...
 
 
 @dataclass
 class DatabaseImp(Database):
     session: "AsyncSession"
 
-    async def get_by_uuid(
+    async def select_by_uuid(
         self,
         uuid: UUID,
-    ):
+    ) -> entry.Model:
         if not (
             entry_model := await self.session.scalar(
                 statement=select(entry.Model).where(entry.Model.uuid == uuid),
@@ -43,8 +43,8 @@ class DatabaseImp(Database):
         self,
         uuid: UUID,
         status: entry.Status,
-    ):
-        entry_model = await self.get_by_uuid(uuid)
+    ) -> None:
+        entry_model = await self.select_by_uuid(uuid)
         if entry_model.status != status:
             entry_model.status = status
             if entry_model.repeat_forever and not entry_model.repeated:
