@@ -6,6 +6,7 @@ start:
 	else \
 		echo "Error: switch to the 'main' branch to start."; \
 	fi;
+
 down:
 	@if [ "$(shell docker ps -aq -f name=marcocarmonadev-backend-devcontainer)" ]; then \
 		docker stop marcocarmonadev-backend-devcontainer; \
@@ -16,3 +17,9 @@ down:
 		docker rm marcocarmonadev-backend-database; \
 	fi
 	@docker compose down;
+
+reopen: down
+	@if [ $(shell git branch --show-current) = main ]; then \
+		echo "Error: switch to another branch to start."; \
+		exit 1; \
+	fi;

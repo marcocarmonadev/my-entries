@@ -24,7 +24,7 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "devcontainer",
 	"workspaceFolder": "/workspace/",
-	"initializeCommand": "make down",
+	"initializeCommand": "make reopen",
 	"onCreateCommand": "curl -sSL https://install.python-poetry.org | python3 -",
 	"postCreateCommand": "poetry install"
 }
