@@ -6,7 +6,8 @@ services:
     command: sleep infinity
     container_name: marcocarmonadev-backend-devcontainer
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     env_file:
       - ../.envs/develoment.env
     image: mcr.microsoft.com/devcontainers/python:3.12
