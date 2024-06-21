@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from entities import entries, entry
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.engine.result import ScalarResult
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import delete, func, select
@@ -67,20 +68,42 @@ class DatabaseImp(Database):
             row := (
                 await self.session.execute(
                     statement=select(
-                        func.sum(entry.Model.amount).label("total_amount"),
-                        func.sum(entry.Model.amount)
+                        func.sum(
+                            entry.Model.amount,
+                        )
+                        .cast(
+                            type_=postgresql.NUMERIC,
+                        )
+                        .label(
+                            name="total_amount",
+                        ),
+                        func.sum(
+                            entry.Model.amount,
+                        )
                         .filter(entry.Model.amount >= 0)
-                        .label("income_amount"),
-                        func.sum(entry.Model.amount)
+                        .cast(
+                            type_=postgresql.NUMERIC,
+                        )
+                        .label(
+                            name="income_amount",
+                        ),
+                        func.sum(
+                            entry.Model.amount,
+                        )
                         .filter(entry.Model.amount < 0)
-                        .label("expense_amount"),
+                        .cast(
+                            type_=postgresql.NUMERIC,
+                        )
+                        .label(
+                            name="expense_amount",
+                        ),
                     ).where(entry.Model.status != entry.Status.PENDING)
                 )
             ).fetchone()
         ):
             raise
         total_amount, income_amount, expense_amount = row
-        return entries.StatisticsSchema.model_construct(
+        return entries.StatisticsSchema(
             total_amount=total_amount or 0,
             income_amount=income_amount or 0,
             expense_amount=expense_amount or 0,
