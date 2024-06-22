@@ -1,4 +1,4 @@
-start:
+start: down
 	@if [ $(shell git branch --show-current) = main ]; then \
 		docker compose up \
 		--build \
