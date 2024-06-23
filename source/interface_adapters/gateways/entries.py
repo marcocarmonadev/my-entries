@@ -6,7 +6,7 @@ from entities import entries, entry
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.engine.result import ScalarResult
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import delete, func, select
+from sqlalchemy.sql import and_, delete, func, select
 
 
 class Database(ABC):
@@ -97,14 +97,30 @@ class DatabaseImp(Database):
                         .label(
                             name="expense_amount",
                         ),
+                        func.sum(
+                            entry.Model.amount,
+                        )
+                        .filter(
+                            and_(
+                                entry.Model.amount < 0,
+                                entry.Model.status == entry.Status.COMPLETED,
+                            )
+                        )
+                        .cast(
+                            type_=postgresql.NUMERIC,
+                        )
+                        .label(
+                            name="complete_expense_amount",
+                        ),
                     ).where(entry.Model.status != entry.Status.PENDING)
                 )
             ).fetchone()
         ):
             raise
-        total_amount, income_amount, expense_amount = row
+        total_amount, income_amount, expense_amount, complete_expense_amount = row
         return entries.StatisticsSchema(
             total_amount=total_amount or 0,
             income_amount=income_amount or 0,
             expense_amount=expense_amount or 0,
+            complete_expense_amount=complete_expense_amount or 0,
         )
