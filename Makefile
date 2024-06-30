@@ -1,10 +1,3 @@
-dev:
-	@if [ $(shell git branch --show-current) = main ]; then \
-		echo "Error: switch to another branch to start."; \
-	else \
-		python source/main.py; \
-	fi;
-
 start: down
 	@if [ $(shell git branch --show-current) = main ]; then \
 		docker compose up \
@@ -12,6 +5,13 @@ start: down
 		--no-log-prefix; \
 	else \
 		echo "Error: switch to the 'main' branch to start."; \
+	fi;
+
+dev:
+	@if [ $(shell git branch --show-current) = main ]; then \
+		echo "Error: switch to another branch to start."; \
+	else \
+		python source/main.py; \
 	fi;
 
 down:
