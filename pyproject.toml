@@ -17,6 +17,9 @@ orjson = "^3.10.5"
 python-dateutil = "^2.9.0.post0"
 alembic = "^1.13.1"
 
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.27.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
