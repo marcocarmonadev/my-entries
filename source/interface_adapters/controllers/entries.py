@@ -30,6 +30,14 @@ class Get:
 
 
 @dataclass
+class GetStatistics:
+    entries_database_gateway: "entries_gateways.Database"
+
+    async def as_jsonb(self):
+        return await self.entries_database_gateway.select_statistics()
+
+
+@dataclass
 class Delete:
     entries_database_gateway: "entries_gateways.Database"
 

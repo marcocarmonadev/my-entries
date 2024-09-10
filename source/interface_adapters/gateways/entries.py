@@ -52,7 +52,7 @@ class DatabaseImp(Database):
         return await self.session.scalars(
             statement=select(entry.Model)
             .where(entry.Model.status != entry.Status.CLOSED)
-            .order_by(entry.Model.due_date),
+            .order_by(entry.Model.due_date, entry.Model.concept),
         )
 
     async def delete(

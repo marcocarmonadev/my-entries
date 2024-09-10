@@ -87,7 +87,7 @@ async def get_entries_statistics(
         dependency=database.Session.generate,
     ),
 ):
-    return await entry_controllers.GetStatistics(
+    return await entries_controllers.GetStatistics(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb()
 
@@ -128,6 +128,23 @@ async def create_entry(
     return await entry_controllers.Create(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb(entry_create_schema)
+
+
+@router.put(
+    path="/amount-inside-cajita",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def update_amount_inside_cajita(
+    body: entry.UpdateAmountInsideCajita,
+    session: "AsyncSession" = Depends(
+        dependency=database.Session.generate,
+    ),
+):
+    await entry_controllers.UpdateAmountInsideCajita(
+        entry_database_gateway=entry_gateways.DatabaseImp(session),
+    ).as_jsonb(
+        new_amount=body.new_amount,
+    )
 
 
 @router.put(

@@ -1,8 +1,8 @@
+import datetime as dt
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from uuid import UUID
 
-from dateutil.relativedelta import relativedelta
 from entities import entry
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import delete, select
@@ -27,6 +27,12 @@ class Database(ABC):
         self,
         entry_uuid: UUID,
     ) -> None: ...
+
+    @abstractmethod
+    async def update_amount_inside_cajita(
+        self,
+        new_amount: float,
+    ): ...
 
 
 @dataclass
@@ -62,11 +68,13 @@ class DatabaseImp(Database):
                         entry.Model(
                             concept=entry_model.concept,
                             amount=entry_model.amount,
-                            due_date=entry_model.due_date
-                            + relativedelta(
-                                months=1 * (entry_model.repeat_interval or 1),
+                            due_date=entry.get_next_due_date(
+                                date=entry_model.due_date,
+                                frequency=entry_model.frequency,
+                                repeat_interval=entry_model.repeat_interval,
                             ),
                             status=entry.Status.PENDING,
+                            frequency=entry_model.frequency,
                             repeat_forever=True,
                             repeated=False,
                             repeat_interval=entry_model.repeat_interval,
@@ -82,3 +90,24 @@ class DatabaseImp(Database):
         await self.session.execute(
             statement=delete(entry.Model).where(entry.Model.uuid == entry_uuid)
         )
+
+    async def update_amount_inside_cajita(
+        self,
+        new_amount: float,
+    ) -> None:
+        initial_amount = 2737.39  # 2024-09-10
+        amount = new_amount - initial_amount
+        if cajita_entry_model := await self.session.scalar(
+            statement=select(entry.Model).where(entry.Model.concept == "Cajita")
+        ):
+            cajita_entry_model.amount = amount
+        else:
+            self.session.add(
+                entry.Model(
+                    concept="Cajita",
+                    amount=amount,
+                    due_date=dt.date.today(),
+                    status=entry.Status.CLOSED,
+                    frequency=entry.Frequency.ONE_TIME,
+                )
+            )
