@@ -1,24 +1,61 @@
+import requests
 import streamlit as st
 
 from source.frameworks_and_drivers.external_interfaces import get_backend_client
 from source.frameworks_and_drivers.external_interfaces.backend import models
+from source.frameworks_and_drivers.user_interface.molecules import (
+    amount_number_input,
+    concept_text_input,
+    due_date_input,
+    frequency_radio,
+    repeat_count_number_input,
+    repeat_interval_number_input,
+    status_selectbox,
+)
 
 
-@st.experimental_dialog(
+@st.dialog(
     title="Add entry",
+    width="large",
 )
 def display():
     backend_client = get_backend_client()
 
     def on_click():
-        backend_client.create_entry(
-            st.session_state.concept,
-            st.session_state.amount,
-            st.session_state.due_date,
-            st.session_state.status,
-            st.session_state.repeat_count,
-            st.session_state.repeat_interval,
-        )
+        try:
+            match st.session_state.frequency:
+                case models.Frequency.ONE_TIME:
+                    backend_client.create_entry(
+                        concept=st.session_state.concept,
+                        amount=st.session_state.amount,
+                        due_date=st.session_state.due_date.strftime("%Y-%m-%d"),
+                        status=st.session_state.status,
+                        frequency=st.session_state.frequency,
+                    )
+                case models.Frequency.BI_WEEKLY:
+                    backend_client.create_entry(
+                        concept=st.session_state.concept,
+                        amount=st.session_state.amount,
+                        due_date=st.session_state.due_date.strftime("%Y-%m-%d"),
+                        frequency=st.session_state.frequency,
+                        repeat_count=st.session_state.repeat_count,
+                    )
+                case _:
+                    backend_client.create_entry(
+                        concept=st.session_state.concept,
+                        amount=st.session_state.amount,
+                        due_date=st.session_state.due_date.strftime("%Y-%m-%d"),
+                        frequency=st.session_state.frequency,
+                        repeat_count=st.session_state.repeat_count,
+                        repeat_interval=st.session_state.repeat_interval,
+                    )
+            st.session_state.sucess_message = "Success at adding entry!"
+        except requests.HTTPError as exc:
+            st.session_state.error_message = (
+                f"Error {exc.response.status_code} at adding entry!"
+            )
+
+    frequency_radio.display()
 
     with st.form(
         key="add_entry_form",
@@ -26,42 +63,32 @@ def display():
     ):
         column1, column2 = st.columns(2)
         with column1:
-            st.text_input(
-                "Concept",
-                key="concept",
-            )
-            st.date_input(
-                "Due date",
-                format="YYYY-MM-DD",
-                key="due_date",
-            )
-            st.number_input(
-                "Repeat count",
-                min_value=-1,
-                value=0,
-                step=1,
-                help="-1 means forever",
-                key="repeat_count",
-            )
+            concept_text_input.display()
+            due_date_input.display()
 
         with column2:
-            st.number_input(
-                "Amount",
-                key="amount",
-                value=0.0,
-            )
-            st.selectbox(
-                label="Status",
-                options=[status for status in models.Status],
-                index=0,
-                key="status",
-            )
-            st.number_input(
-                "Repeat interval",
-                min_value=1,
-                step=1,
-                key="repeat_interval",
-            )
+            amount_number_input.display()
+
+            if st.session_state.frequency in {
+                models.Frequency.ONE_TIME,
+            }:
+                status_selectbox.display()
+
+            if st.session_state.frequency in {
+                models.Frequency.BI_WEEKLY,
+            }:
+                repeat_count_number_input.display()
+
+            if st.session_state.frequency not in {
+                models.Frequency.ONE_TIME,
+                models.Frequency.BI_WEEKLY,
+            }:
+                subcolumn1, subcolumn2 = st.columns(2)
+                with subcolumn1:
+                    repeat_count_number_input.display()
+
+                with subcolumn2:
+                    repeat_interval_number_input.display()
 
         if st.form_submit_button(
             label="Submit",

@@ -8,9 +8,15 @@ from pydantic import BaseModel
 class Status(StrEnum):
     PENDING = "pending"
     COMPLETED = "completed"
-    GENERATE_INVOICE = "generate_invoice"
-    WAITING_INVOICE = "waiting_invoice"
     CLOSED = "closed"
+
+
+class Frequency(StrEnum):
+    ONE_TIME = "one-time"
+    WEEKLY = "weekly"
+    BI_WEEKLY = "bi-weekly"
+    MONTLY = "montly"
+    YEARLY = "yearly"
 
 
 class Entry(BaseModel):
@@ -19,3 +25,4 @@ class Entry(BaseModel):
     due_date: dt.date
     uuid: UUID
     status: Status
+    frequency: Frequency

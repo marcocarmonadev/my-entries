@@ -6,20 +6,21 @@ from fastapi.param_functions import Body, Depends, Path
 from fastapi.routing import APIRouter
 from starlette import status
 
-from source.entities import entries, entry, tag
-from source.frameworks_and_drivers import database
+from source.entities import entries, entry
+from source.frameworks_and_drivers.web.dependencies import session_generator
+from source.frameworks_and_drivers.web.enums import Tag
 from source.interface_adapters.controllers import entries as entries_controllers
 from source.interface_adapters.controllers import entry as entry_controllers
 from source.interface_adapters.gateways import entries as entries_gateways
 from source.interface_adapters.gateways import entry as entry_gateways
 
 if TYPE_CHECKING:
-    from sqlalchemy.ext.asyncio import AsyncSession
+    from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/entries",
     tags=[
-        tag.Entity.ENTRIES,
+        Tag.ENTRIES,
     ],
 )
 
@@ -28,13 +29,13 @@ router = APIRouter(
     path="/{entry_uuid}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_entry(
+def delete_entry(
     entry_uuid: UUID = Path(...),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    await entry_controllers.Delete(
+    entry_controllers.Delete(
         entry_database_gateway=entry_gateways.DatabaseImp(session),
     ).as_jsonb(entry_uuid)
 
@@ -43,13 +44,13 @@ async def delete_entry(
     path="",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_entries(
+def delete_entries(
     entry_uuids: list[UUID] = Body(...),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    await entries_controllers.Delete(
+    entries_controllers.Delete(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb(entry_uuids)
 
@@ -62,15 +63,15 @@ async def delete_entries(
         }
     },
 )
-async def get_entries(
+def get_entries(
     only_active: bool = Query(
         default=True,
     ),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    return await entries_controllers.Get(
+    return entries_controllers.Get(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb(only_active)
 
@@ -83,12 +84,12 @@ async def get_entries(
         }
     },
 )
-async def get_entries_statistics(
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+def get_entries_statistics(
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    return await entries_controllers.GetStatistics(
+    return entries_controllers.GetStatistics(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb()
 
@@ -101,13 +102,13 @@ async def get_entries_statistics(
         }
     },
 )
-async def get_entry(
+def get_entry(
     entry_uuid: UUID = Path(...),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    return await entry_controllers.Get(
+    return entry_controllers.Get(
         entry_database_gateway=entry_gateways.DatabaseImp(session),
     ).as_jsonb(entry_uuid)
 
@@ -120,13 +121,13 @@ async def get_entry(
         }
     },
 )
-async def create_entry(
+def create_entry(
     entry_create_schema: entry.CreateSchema = Body(...),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    return await entry_controllers.Create(
+    return entry_controllers.Create(
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb(entry_create_schema)
 
@@ -135,13 +136,13 @@ async def create_entry(
     path="/amount-inside-cajita",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def update_amount_inside_cajita(
+def update_amount_inside_cajita(
     body: entry.UpdateAmountInsideCajita,
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    await entry_controllers.UpdateAmountInsideCajita(
+    entry_controllers.UpdateAmountInsideCajita(
         entry_database_gateway=entry_gateways.DatabaseImp(session),
     ).as_jsonb(
         new_amount=body.new_amount,
@@ -152,13 +153,13 @@ async def update_amount_inside_cajita(
     path="/{entry_uuid}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def update_entry(
+def update_entry(
     entry_uuid: UUID = Path(...),
     entry_update_schema: entry.UpdateSchema = Body(...),
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
+    session: "Session" = Depends(
+        dependency=session_generator,
     ),
 ):
-    await entry_controllers.Update(
+    entry_controllers.Update(
         entry_database_gateway=entry_gateways.DatabaseImp(session),
     ).as_jsonb(entry_uuid, entry_update_schema)

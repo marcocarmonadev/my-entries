@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 from uuid import UUID
 
 from dateutil.relativedelta import relativedelta
-
 from source.entities import entry
 
 if TYPE_CHECKING:
@@ -15,7 +14,7 @@ if TYPE_CHECKING:
 class Create:
     entries_database_gateway: "entries_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         entry_create_schema: entry.CreateSchema,
     ) -> list[entry.ReadSchema]:
@@ -123,7 +122,10 @@ class Create:
                             ]
                         ]
                     )
-        await self.entries_database_gateway.insert(entries)
+        for i in entries:
+            print(i.concept)
+        self.entries_database_gateway.insert(entries)
+        print(entries)
         return [
             entry.ReadSchema.model_validate(
                 _entry,
@@ -137,12 +139,12 @@ class Create:
 class Update:
     entry_database_gateway: "entry_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         entry_uuid: UUID,
         entry_update_schema: entry.UpdateSchema,
     ):
-        await self.entry_database_gateway.update(
+        self.entry_database_gateway.update(
             entry_uuid,
             entry_update_schema,
         )
@@ -152,23 +154,23 @@ class Update:
 class Delete:
     entry_database_gateway: "entry_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         entry_uuid: UUID,
     ):
-        await self.entry_database_gateway.delete(entry_uuid)
+        self.entry_database_gateway.delete(entry_uuid)
 
 
 @dataclass
 class Get:
     entry_database_gateway: "entry_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         entry_uuid: UUID,
     ):
         return entry.ReadSchema.model_validate(
-            obj=await self.entry_database_gateway.select_by_uuid(entry_uuid),
+            obj=self.entry_database_gateway.select_by_uuid(entry_uuid),
             from_attributes=True,
         )
 
@@ -177,8 +179,8 @@ class Get:
 class UpdateAmountInsideCajita:
     entry_database_gateway: "entry_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         new_amount: float,
     ):
-        await self.entry_database_gateway.update_amount_inside_cajita(new_amount)
+        self.entry_database_gateway.update_amount_inside_cajita(new_amount)

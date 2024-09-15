@@ -4,7 +4,7 @@ from uuid import UUID
 
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.engine.result import ScalarResult
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from sqlalchemy.sql import and_, delete, func, select
 
 from source.entities import entries, entry
@@ -12,62 +12,64 @@ from source.entities import entries, entry
 
 class Database(ABC):
     @abstractmethod
-    async def insert(
+    def insert(
         self,
         entry_models: list[entry.Model],
     ) -> None: ...
 
     @abstractmethod
-    async def select(self) -> ScalarResult[entry.Model]: ...
+    def select(self) -> ScalarResult[entry.Model]: ...
 
     @abstractmethod
-    async def select_actives(self) -> ScalarResult[entry.Model]: ...
+    def select_actives(self) -> ScalarResult[entry.Model]: ...
 
     @abstractmethod
-    async def delete(
+    def delete(
         self,
         entry_uuids: list[UUID],
     ) -> None: ...
 
     @abstractmethod
-    async def select_statistics(self) -> entries.StatisticsSchema: ...
+    def select_statistics(self) -> entries.StatisticsSchema: ...
 
 
 @dataclass
 class DatabaseImp(Database):
-    session: "AsyncSession"
+    session: "Session"
 
-    async def insert(
+    def insert(
         self,
         entry_models: list[entry.Model],
     ) -> None:
-        async with self.session.begin_nested():
+        with self.session.begin_nested():
             self.session.add_all(entry_models)
+        for i in entry_models:
+            print(i.id)
 
-    async def select(self) -> ScalarResult[entry.Model]:
-        return await self.session.scalars(
+    def select(self) -> ScalarResult[entry.Model]:
+        return self.session.scalars(
             statement=select(entry.Model).order_by(entry.Model.due_date),
         )
 
-    async def select_actives(self) -> ScalarResult[entry.Model]:
-        return await self.session.scalars(
+    def select_actives(self) -> ScalarResult[entry.Model]:
+        return self.session.scalars(
             statement=select(entry.Model)
             .where(entry.Model.status != entry.Status.CLOSED)
             .order_by(entry.Model.due_date, entry.Model.concept),
         )
 
-    async def delete(
+    def delete(
         self,
         entry_uuids: list[UUID],
     ):
-        await self.session.execute(
+        self.session.execute(
             statement=delete(entry.Model).where(entry.Model.uuid.in_(entry_uuids))
         )
 
-    async def select_statistics(self) -> entries.StatisticsSchema:
+    def select_statistics(self) -> entries.StatisticsSchema:
         if not (
             row := (
-                await self.session.execute(
+                self.session.execute(
                     statement=select(
                         func.sum(
                             entry.Model.amount,

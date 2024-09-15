@@ -1,12 +1,10 @@
-import datetime as dt
 from dataclasses import dataclass, field
 from typing import Any
 from uuid import UUID
 
 import requests
 
-from . import Settings
-from .models import Entry, Status
+from . import Settings, models
 
 
 @dataclass
@@ -16,32 +14,21 @@ class Client:
         default_factory=Settings,  # type: ignore
     )
 
-    def create_entry(
-        self,
-        concept: str,
-        amount: float,
-        due_date: dt.date,
-        status: Status,
-        repeat_count: int,
-        repeat_interval: int,
-    ):
-        self.http_session.post(
-            url=f"{self.settings.BASE_URL}api/v1/entries",
-            json={
-                "concept": concept,
-                "amount": amount,
-                "due_date": due_date.strftime("%Y-%m-%d"),
-                "status": status.value,
-                "repeat_count": repeat_count,
-                "repeat_interval": repeat_interval,
-            },
-        )
+    def create_entry(self, **body):
+        try:
+            response = self.http_session.post(
+                url=f"{self.settings.BASE_URL}api/v1/entries",
+                json=body,
+            )
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            raise exc
 
     def get_entries(self):
         response = self.http_session.get(
             url=f"{self.settings.BASE_URL}api/v1/entries",
         )
-        return [Entry(**entry) for entry in response.json()]
+        return [models.Entry(**entry) for entry in response.json()]
 
     def update_entry(
         self,
@@ -60,6 +47,21 @@ class Client:
         self.http_session.delete(
             url=f"{self.settings.BASE_URL}api/v1/entries/{entry_uuid}",
         )
+
+    def update_amount_inside_cajita(
+        self,
+        new_amount: float,
+    ):
+        try:
+            response = self.http_session.put(
+                url=f"{self.settings.BASE_URL}api/v1/entries/amount-inside-cajita",
+                json={
+                    "new_amount": new_amount,
+                },
+            )
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            raise exc
 
     def delete_entries(
         self,

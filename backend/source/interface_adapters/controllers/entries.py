@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Get:
     entries_database_gateway: "entries_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         only_active: bool,
     ) -> list[entry.ReadSchema]:
@@ -25,7 +25,7 @@ class Get:
                 _entry,
                 from_attributes=True,
             )
-            for _entry in await select_function
+            for _entry in select_function
         ]
 
 
@@ -33,16 +33,16 @@ class Get:
 class GetStatistics:
     entries_database_gateway: "entries_gateways.Database"
 
-    async def as_jsonb(self):
-        return await self.entries_database_gateway.select_statistics()
+    def as_jsonb(self):
+        return self.entries_database_gateway.select_statistics()
 
 
 @dataclass
 class Delete:
     entries_database_gateway: "entries_gateways.Database"
 
-    async def as_jsonb(
+    def as_jsonb(
         self,
         uuids: list[UUID],
     ) -> None:
-        await self.entries_database_gateway.delete(uuids)
+        self.entries_database_gateway.delete(uuids)

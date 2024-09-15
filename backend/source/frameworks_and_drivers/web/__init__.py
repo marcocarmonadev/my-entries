@@ -3,7 +3,7 @@ from fastapi.responses import ORJSONResponse
 
 from .routers import router as api_router
 
-api = FastAPI(
+app = FastAPI(
     default_response_class=ORJSONResponse,
 )
-api.include_router(api_router)
+app.include_router(api_router)

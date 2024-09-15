@@ -1,6 +1,5 @@
 from enum import Enum
 
 
-class Entity(Enum):
+class Tag(Enum):
     ENTRIES = "Entries"
-    STATUSES = "Statuses"

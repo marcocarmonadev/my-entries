@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from sqlalchemy.sql import delete, select
 
 from source.entities import entry
@@ -11,26 +11,26 @@ from source.entities import entry
 
 class Database(ABC):
     @abstractmethod
-    async def select_by_uuid(
+    def select_by_uuid(
         self,
         entry_uuid: UUID,
     ) -> entry.Model: ...
 
     @abstractmethod
-    async def update(
+    def update(
         self,
         entry_uuid: UUID,
         entry_update_schema: entry.UpdateSchema,
     ) -> None: ...
 
     @abstractmethod
-    async def delete(
+    def delete(
         self,
         entry_uuid: UUID,
     ) -> None: ...
 
     @abstractmethod
-    async def update_amount_inside_cajita(
+    def update_amount_inside_cajita(
         self,
         new_amount: float,
     ): ...
@@ -38,26 +38,26 @@ class Database(ABC):
 
 @dataclass
 class DatabaseImp(Database):
-    session: "AsyncSession"
+    session: "Session"
 
-    async def select_by_uuid(
+    def select_by_uuid(
         self,
         entry_uuid: UUID,
     ) -> entry.Model:
         if not (
-            entry_model := await self.session.scalar(
+            entry_model := self.session.scalar(
                 statement=select(entry.Model).where(entry.Model.uuid == entry_uuid),
             )
         ):
             raise
         return entry_model
 
-    async def update(
+    def update(
         self,
         entry_uuid: UUID,
         entry_update_schema: entry.UpdateSchema,
     ) -> None:
-        entry_model = await self.select_by_uuid(entry_uuid)
+        entry_model = self.select_by_uuid(entry_uuid)
         for k, v in entry_update_schema.model_dump(
             exclude_unset=True,
         ).items():
@@ -84,21 +84,21 @@ class DatabaseImp(Database):
             else:
                 entry_model.__setattr__(k, v)
 
-    async def delete(
+    def delete(
         self,
         entry_uuid: UUID,
     ) -> None:
-        await self.session.execute(
+        self.session.execute(
             statement=delete(entry.Model).where(entry.Model.uuid == entry_uuid)
         )
 
-    async def update_amount_inside_cajita(
+    def update_amount_inside_cajita(
         self,
         new_amount: float,
     ) -> None:
-        initial_amount = 2737.39  # 2024-09-10
+        initial_amount = 2739.46  # 2024-09-14
         amount = new_amount - initial_amount
-        if cajita_entry_model := await self.session.scalar(
+        if cajita_entry_model := self.session.scalar(
             statement=select(entry.Model).where(entry.Model.concept == "Cajita")
         ):
             cajita_entry_model.amount = amount
