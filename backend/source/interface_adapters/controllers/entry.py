@@ -122,10 +122,7 @@ class Create:
                             ]
                         ]
                     )
-        for i in entries:
-            print(i.concept)
         self.entries_database_gateway.insert(entries)
-        print(entries)
         return [
             entry.ReadSchema.model_validate(
                 _entry,

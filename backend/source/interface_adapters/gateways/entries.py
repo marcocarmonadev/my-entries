@@ -43,8 +43,6 @@ class DatabaseImp(Database):
     ) -> None:
         with self.session.begin_nested():
             self.session.add_all(entry_models)
-        for i in entry_models:
-            print(i.id)
 
     def select(self) -> ScalarResult[entry.Model]:
         return self.session.scalars(
