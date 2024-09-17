@@ -19,9 +19,6 @@ fastapi = "^0.114.2"
 [tool.poetry.scripts]
 my-entries-backend = "source.frameworks_and_drivers.web.__main__:main"
 
-[tool.poetry.group.dev.dependencies]
-ipython = "^8.27.0"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
