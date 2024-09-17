@@ -89,11 +89,7 @@ def get_entries_statistics(
         dependency=session_generator,
     ),
 ):
-<<<<<<< HEAD:source/frameworks_and_devices/web/api/routers/v1/entries.py
-    return await entries_controllers.GetStatistics(
-=======
     return entries_controllers.GetStatistics(
->>>>>>> development:backend/source/frameworks_and_drivers/web/routers/v1/entries.py
         entries_database_gateway=entries_gateways.DatabaseImp(session),
     ).as_jsonb()
 
@@ -140,15 +136,6 @@ def create_entry(
     path="/amount-inside-cajita",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-<<<<<<< HEAD:source/frameworks_and_devices/web/api/routers/v1/entries.py
-async def update_amount_inside_cajita(
-    body: entry.UpdateAmountInsideCajita,
-    session: "AsyncSession" = Depends(
-        dependency=database.Session.generate,
-    ),
-):
-    await entry_controllers.UpdateAmountInsideCajita(
-=======
 def update_amount_inside_cajita(
     body: entry.UpdateAmountInsideCajita,
     session: "Session" = Depends(
@@ -156,7 +143,6 @@ def update_amount_inside_cajita(
     ),
 ):
     entry_controllers.UpdateAmountInsideCajita(
->>>>>>> development:backend/source/frameworks_and_drivers/web/routers/v1/entries.py
         entry_database_gateway=entry_gateways.DatabaseImp(session),
     ).as_jsonb(
         new_amount=body.new_amount,

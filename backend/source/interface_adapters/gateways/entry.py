@@ -3,12 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from uuid import UUID
 
-<<<<<<< HEAD:source/interface_adapters/gateways/entry.py
-from entities import entry
-from sqlalchemy.ext.asyncio import AsyncSession
-=======
 from sqlalchemy.orm import Session
->>>>>>> development:backend/source/interface_adapters/gateways/entry.py
 from sqlalchemy.sql import delete, select
 
 from source.entities import entry
@@ -35,11 +30,7 @@ class Database(ABC):
     ) -> None: ...
 
     @abstractmethod
-<<<<<<< HEAD:source/interface_adapters/gateways/entry.py
-    async def update_amount_inside_cajita(
-=======
     def update_amount_inside_cajita(
->>>>>>> development:backend/source/interface_adapters/gateways/entry.py
         self,
         new_amount: float,
     ): ...
@@ -101,15 +92,6 @@ class DatabaseImp(Database):
             statement=delete(entry.Model).where(entry.Model.uuid == entry_uuid)
         )
 
-<<<<<<< HEAD:source/interface_adapters/gateways/entry.py
-    async def update_amount_inside_cajita(
-        self,
-        new_amount: float,
-    ) -> None:
-        initial_amount = 2737.39  # 2024-09-10
-        amount = new_amount - initial_amount
-        if cajita_entry_model := await self.session.scalar(
-=======
     def update_amount_inside_cajita(
         self,
         new_amount: float,
@@ -117,7 +99,6 @@ class DatabaseImp(Database):
         initial_amount = 2739.46  # 2024-09-14
         amount = new_amount - initial_amount
         if cajita_entry_model := self.session.scalar(
->>>>>>> development:backend/source/interface_adapters/gateways/entry.py
             statement=select(entry.Model).where(entry.Model.concept == "Cajita")
         ):
             cajita_entry_model.amount = amount

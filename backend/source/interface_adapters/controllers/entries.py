@@ -33,13 +33,8 @@ class Get:
 class GetStatistics:
     entries_database_gateway: "entries_gateways.Database"
 
-<<<<<<< HEAD:source/interface_adapters/controllers/entries.py
-    async def as_jsonb(self):
-        return await self.entries_database_gateway.select_statistics()
-=======
     def as_jsonb(self):
         return self.entries_database_gateway.select_statistics()
->>>>>>> development:backend/source/interface_adapters/controllers/entries.py
 
 
 @dataclass
