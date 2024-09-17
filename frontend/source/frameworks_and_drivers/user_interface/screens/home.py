@@ -10,8 +10,12 @@ from source.frameworks_and_drivers.user_interface.organisms import (
 
 
 def display():
+    st.set_page_config(
+        page_title="My entries",
+        page_icon="💰",
+    )
     st.title(
-        body="My entries",
+        body="💰 My entries",
     )
 
     statistics_metrics.display()
