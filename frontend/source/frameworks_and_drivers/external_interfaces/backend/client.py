@@ -25,10 +25,14 @@ class Client:
             raise exc
 
     def get_entries(self):
-        response = self.http_session.get(
-            url=f"{self.settings.BASE_URL}api/v1/entries",
-        )
-        return [models.Entry(**entry) for entry in response.json()]
+        try:
+            response = self.http_session.get(
+                url=f"{self.settings.BASE_URL}api/v1/entries",
+            )
+        except requests.ConnectionError as exc:
+            raise exc
+        else:
+            return [models.Entry(**entry) for entry in response.json()]
 
     def update_entry(
         self,
