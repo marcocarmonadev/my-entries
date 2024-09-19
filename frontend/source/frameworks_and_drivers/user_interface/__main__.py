@@ -5,7 +5,7 @@ from streamlit.web import cli as streamlit_cli
 
 
 class Settings(BaseSettings):
-    DEBUG: bool = False
+    DEBUG: bool
 
 
 def main():

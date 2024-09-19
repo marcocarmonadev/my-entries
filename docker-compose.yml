@@ -1,0 +1,22 @@
+name: my-entries-app-dev
+
+services:
+  backend:
+    build: backend
+    container_name: my-entries-backend-dev-container
+    env_file: backend/.env
+    image: marcocarmonapy/my-entries-backend
+    network_mode: host
+    pull_policy: build
+    volumes:
+      - ./backend/local.db:/workdir/local.db
+
+  frontend:
+    build: frontend
+    container_name: my-entries-frontend-dev-container
+    depends_on:
+      - backend
+    env_file: frontend/.env
+    image: marcocarmonapy/my-entries-frontend
+    network_mode: host
+    pull_policy: build

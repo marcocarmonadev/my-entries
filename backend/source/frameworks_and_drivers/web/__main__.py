@@ -3,11 +3,11 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DEBUG: bool = False
+    DEBUG: bool
 
 
 def main():
-    settings = Settings()
+    settings = Settings()  # type: ignore
     uvicorn.run(
         app="source.frameworks_and_drivers.web:app",
         host="127.0.0.1" if settings.DEBUG else "0.0.0.0",
