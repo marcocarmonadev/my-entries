@@ -1,4 +1,3 @@
-**/.envs/*
-!**/.envs/template.env
+**/.env
 **/__pycache__/
-backend/local.*
+backend/local.db

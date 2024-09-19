@@ -1,9 +1,2 @@
 dev:
-	@dotenv \
-		--file .envs/development.env \
-		run poetry run my-entries-backend
-
-start:
-	@dotenv \
-		--file .envs/production.env \
-		run poetry run my-entries-backend
+	@poetry run dotenv run python -m source.frameworks_and_drivers.web
