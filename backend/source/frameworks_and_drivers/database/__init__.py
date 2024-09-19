@@ -8,8 +8,8 @@ class Settings(BaseSettings):
         env_prefix="DATABASE_",
     )
 
-    URL: str = "sqlite:///local.db"
-    DEBUG: bool = False
+    URL: str
+    DEBUG: bool
 
 
 def _create_engine(
