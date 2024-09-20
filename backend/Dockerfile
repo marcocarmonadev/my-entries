@@ -1,14 +1,13 @@
 FROM python:3.12-alpine AS base
 RUN --mount=type=cache,target=/var/cache/apk \
     apk update \
-    && apk upgrade --available
+    && apk upgrade --available \
+    && apk add curl
 
 
 FROM base AS builder
 ENV POETRY_HOME=/etc/poetry \
     POETRY_VIRTUALENVS_IN_PROJECT=1
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk add curl
 RUN curl -sSL https://install.python-poetry.org | python3 - \
     && cd /usr/local/bin \
     && ln -s /etc/poetry/bin/poetry

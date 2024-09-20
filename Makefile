@@ -5,8 +5,7 @@ preview:
 	@docker compose up --build
 
 push:
-	@cd backend && make push
-	@cd frontend && make push
+	@docker compose push
 
 clean:
 	@docker compose down

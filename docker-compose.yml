@@ -5,6 +5,8 @@ services:
     build: backend
     container_name: my-entries-backend-dev-container
     env_file: backend/.env
+    healthcheck:
+      test: curl -f http://localhost:8001/api/health
     image: marcocarmonapy/my-entries-backend
     network_mode: host
     pull_policy: build
@@ -15,7 +17,8 @@ services:
     build: frontend
     container_name: my-entries-frontend-dev-container
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     env_file: frontend/.env
     image: marcocarmonapy/my-entries-frontend
     network_mode: host
