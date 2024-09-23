@@ -4,7 +4,7 @@ dev:
 build:
 	@docker build --tag my-entries-backend .
 
-preview: build
+run: build
 	@docker run \
 		--env-file .env \
 		--name=my-entries-backend-dev-container \
@@ -12,7 +12,3 @@ preview: build
 		--volume ./local.db:/workdir/local.db \
 		--rm \
 		my-entries-backend
-
-push: build
-	@docker tag my-entries-backend marcocarmonapy/my-entries-backend
-	@docker push marcocarmonapy/my-entries-backend

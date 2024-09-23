@@ -4,14 +4,10 @@ dev:
 build:
 	@docker build --tag my-entries-frontend .
 
-preview: build
+run: build
 	@docker run \
 		--env-file .env \
 		--name=my-entries-frontend-dev-container \
 		--network host \
 		--rm \
 		my-entries-frontend
-
-push: build
-	@docker tag my-entries-frontend marcocarmonapy/my-entries-frontend
-	@docker push marcocarmonapy/my-entries-frontend

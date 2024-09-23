@@ -1,11 +1,8 @@
 build:
 	@docker compose build
 
-preview:
+up:
 	@docker compose up --build
 
-push:
-	@docker compose push
-
-clean:
+down:
 	@docker compose down
