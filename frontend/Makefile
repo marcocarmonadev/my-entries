@@ -7,7 +7,7 @@ build:
 run: build
 	@docker run \
 		--env-file .env \
-		--name=my-entries-frontend-dev-container \
+		--name=my-entries-frontend-dev \
 		--network host \
 		--rm \
 		my-entries-frontend

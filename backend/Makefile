@@ -7,7 +7,7 @@ build:
 run: build
 	@docker run \
 		--env-file .env \
-		--name=my-entries-backend-dev-container \
+		--name=my-entries-backend-dev \
 		--network host \
 		--volume ./local.db:/workdir/local.db \
 		--rm \
