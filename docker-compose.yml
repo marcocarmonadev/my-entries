@@ -1,13 +1,13 @@
-name: my-entries-app-dev
+name: my-entries-preview
 
 services:
   backend:
     build: backend
-    container_name: my-entries-backend-dev
+    container_name: my-entries-backend-preview
     env_file: backend/.env
     healthcheck:
       test: curl -f http://localhost:8001/api/health
-    image: marcocarmonapy/my-entries-backend
+    image: marcocarmonapy/my-entries-backend:preview
     network_mode: host
     pull_policy: build
     volumes:
@@ -15,11 +15,11 @@ services:
 
   frontend:
     build: frontend
-    container_name: my-entries-frontend-dev
+    container_name: my-entries-frontend-preview
     depends_on:
       backend:
         condition: service_healthy
     env_file: frontend/.env
-    image: marcocarmonapy/my-entries-frontend
+    image: marcocarmonapy/my-entries-frontend:preview
     network_mode: host
     pull_policy: build

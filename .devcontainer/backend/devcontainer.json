@@ -1,0 +1,17 @@
+{
+    "name": "My Entries - Backend",
+    "dockerComposeFile": [
+        "../../docker-compose.devcontainer.yml"
+    ],
+    "service": "backend",
+    "shutdownAction": "none",
+    "workspaceFolder": "/workspace/backend",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "Postman.postman-for-vscode",
+                "qwtel.sqlite-viewer"
+            ]
+        }
+    }
+}
