@@ -1,14 +1,22 @@
-dev:
-	@poetry run dotenv run python -m source.frameworks_and_drivers.web
+IMAGE_NAME = marcocarmonapy/my-entries-backend
+IMAGE_TAG = preview
+IMAGE = $(IMAGE_NAME):$(IMAGE_TAG)
 
-build:
-	@docker build --tag my-entries-backend .
+run:
+	@uv run dotenv run python -m source.frameworks_and_drivers.web
 
-run: build
+check:
+	@uv run ruff check
+
+format:
+	@uv run ruff format
+
+preview:
+	@docker build --tag $(IMAGE) .
 	@docker run \
 		--env-file .env \
-		--name=my-entries-backend-dev \
+		--name=my-entries-backend-$(IMAGE_TAG) \
 		--network host \
-		--volume ./local.db:/workdir/local.db \
+		--volume ./local.db:/app/local.db \
 		--rm \
-		my-entries-backend
+		$(IMAGE)
