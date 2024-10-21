@@ -5,7 +5,7 @@
     ],
     "service": "backend",
     "shutdownAction": "none",
-    "workspaceFolder": "/workspace/backend",
+    "workspaceFolder": "/workspaces/backend",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -13,5 +13,6 @@
                 "qwtel.sqlite-viewer"
             ]
         }
-    }
+    },
+    "postStartCommand": "uv sync"
 }

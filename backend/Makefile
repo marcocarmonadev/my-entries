@@ -1,6 +1,4 @@
-IMAGE_NAME = marcocarmonapy/my-entries-backend
-IMAGE_TAG = preview
-IMAGE = $(IMAGE_NAME):$(IMAGE_TAG)
+IMAGE = my-entries-backend
 
 run:
 	@uv run dotenv run python -m source.frameworks_and_drivers.web
@@ -15,7 +13,7 @@ preview:
 	@docker build --tag $(IMAGE) .
 	@docker run \
 		--env-file .env \
-		--name=my-entries-backend-$(IMAGE_TAG) \
+		--name=$(IMAGE) \
 		--network host \
 		--volume ./local.db:/app/local.db \
 		--rm \
