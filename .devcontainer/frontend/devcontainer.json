@@ -1,7 +1,7 @@
 {
     "name": "My Entries - Frontend",
     "dockerComposeFile": [
-        "../../docker-compose.devcontainer.yml"
+        "../docker-compose.devcontainer.yml"
     ],
     "service": "frontend",
     "shutdownAction": "none",

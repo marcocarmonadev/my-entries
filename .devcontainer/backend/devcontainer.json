@@ -1,7 +1,7 @@
 {
     "name": "My Entries - Backend",
     "dockerComposeFile": [
-        "../../docker-compose.devcontainer.yml"
+        "../docker-compose.yml"
     ],
     "service": "backend",
     "shutdownAction": "none",
