@@ -2,16 +2,15 @@ name: my-entries-devcontainer
 
 services:
   backend-devcontainer:
-    container_name: my-entries-backend-devcontainer
+    command: sleep infinity
+    container_name: my-entries-backend-devcontainer    
     image: ghcr.io/marcocarmonadev/devcontainers/python:3.12
     volumes:
       - ..:/workspaces:cached
-    command: sleep infinity
-    
 
   frontend-devcontainer:
+    command: sleep infinity
     container_name: my-entries-frontend-devcontainer
     image: ghcr.io/marcocarmonadev/devcontainers/python:3.12
     volumes:
       - ..:/workspaces:cached
-    command: sleep infinity
