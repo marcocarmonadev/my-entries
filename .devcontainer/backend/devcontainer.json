@@ -1,11 +1,6 @@
 {
     "name": "My Entries - Backend",
-    "dockerComposeFile": [
-        "../docker-compose.yml"
-    ],
-    "service": "backend",
     "shutdownAction": "none",
-    "workspaceFolder": "/workspaces/backend",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -14,5 +9,8 @@
             ]
         }
     },
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/workspaces/backend",
     "postStartCommand": "uv sync"
 }

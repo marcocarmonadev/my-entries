@@ -1,10 +1,8 @@
 {
     "name": "My Entries - Frontend",
-    "dockerComposeFile": [
-        "../docker-compose.devcontainer.yml"
-    ],
-    "service": "frontend",
     "shutdownAction": "none",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "frontend",
     "workspaceFolder": "/workspaces/frontend",
     "postStartCommand": "uv sync"
 }
